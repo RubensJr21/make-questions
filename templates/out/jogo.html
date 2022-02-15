@@ -1,0 +1,123 @@
+<html>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem vindo ao Jogo de Perguntas Bíblicas</title>
+
+    <style>
+    .acertou {
+        color: green
+    }
+
+    .errou {
+        color: red
+    }
+    </style>
+
+    <body>
+        <h1>
+            <center>Bem vindo ao Jogo de Perguntas Bíblicas</center>
+        </h1>
+        <h4>
+            As perguntas estão divididas em Fácil, Médio e Difícil.<br />
+            A Fácil vale 10 pontos.<br />
+            A Médio vale 30 pontos.<br />
+            A Difícil vale 50 pontos.<br />
+            E temos uma bônus valendo 100 pontos.<br />
+            No final do Jogo você terá sua pontuação.
+        </h4>
+        <div id="biblia">
+            <div id="questoes"></div>
+            <button onclick="verificar();"><span style="font-size: 24px;">Verificar</span></button>
+        </div>
+    </body>
+    <script>
+    var pontos=0;
+
+    const questoes = '${{{questões}}}'
+
+    function existeQuestaoVazia(questoes = []){
+        const marcados = [...document.querySelector("div#biblia").querySelectorAll("input")].filter((item) => item.checked)
+        return marcados.length < 10
+    }
+
+    function verificaTodasAsRespostas(questao = [], respostas = []){
+        const verificaQuestao = (questao, opcCorreta) =>  questao.querySelector(`input#${opcCorreta}`).checked
+        questao.forEach((item, index, array) => {
+        if(verificaQuestao(item, respostas[index].resposta.alternativa_correta)){
+            pontos += respostas[index].pontuacao;
+            respostas[index].classe = "acertou"
+        }else{
+            respostas[index].classe = "errou"
+        }
+        })
+    }
+    
+    function geraTextoDaQuestao(info = {}){
+        const getText = (text = "") => text.charAt(0).toUpperCase() + text.slice(1)
+        let htmlFinal = "<fieldset>\n"
+        htmlFinal += `<legend>${info.titulo}:</legend>\n`
+        htmlFinal += `<h2 class=${info.classe}>Você ${getText(info.classe)}!</h2>\n`
+        htmlFinal += `<p>Resposta: ${info.respostaCerta}</p>\n`
+        htmlFinal += "</fieldset>\n"
+        return htmlFinal;
+    }
+
+    function trocaSolucao(){
+        let html = "<div id=\"resultado\">\n"
+        html += questoes.reduce((stringFinal, item, index) => {
+            info = {
+                titulo: `Questão ${index+1}`,
+                classe: item.classe,
+                respostaCerta: item.resposta.extenso
+            }
+            return stringFinal + geraTextoDaQuestao(info)
+        }, "")
+        html += `<h2>Pontuação: ${pontos}</h2>`
+        html += "<button onclick=\"reiniciaJogo();\"><span style=\"font-size: 24px;\">Reiniciar</span></button>"
+        html += "</div>\n"
+        document.getElementById("biblia").innerHTML = ""
+        setTimeout(() => document.getElementById("biblia").innerHTML = html, 5);
+    }
+    function verificar(){
+        if(!existeQuestaoVazia()){
+            const biblia = document.getElementById("biblia")
+            let elementosQuestoes = [...biblia.querySelector("div#questoes").children] // Retorna as divs de cada questão
+            verificaTodasAsRespostas(elementosQuestoes, questoes)
+            trocaSolucao()
+        } else {
+            alert("Responda a todas as questões!")
+        }
+    }
+    
+    function geraQuestoes(questoes = []){
+        return questoes.reduce((stringFinal, questao, index) => {
+            index++
+            return stringFinal + `
+<div id="questao${index}">
+    <h2>${index}. ${questao.pergunta}</h2>
+    <input type="radio" name="questao${index}" id="a" />
+    <label>${questao.resposta.opcoes.a}</label><br/>
+    <input type="radio" name="questao${index}" id="b" />
+    <label>${questao.resposta.opcoes.b}</label><br/>
+    <input type="radio" name="questao${index}" id="c" />
+    <label>${questao.resposta.opcoes.c}</label><br/>
+    <input type="radio" name="questao${index}" id="d" />
+    <label>${questao.resposta.opcoes.d}</label><br/>
+</div>
+        `
+        }, "")
+    }
+
+    function reiniciaJogo(){
+        pontos = 0
+        let html = "<div id=\"questoes\">\n"
+        html += geraQuestoes(questoes)
+        html += "</div>\n"
+        html += "<button onclick=\"verificar();\"><span style=\"font-size: 24px;\">Verificar</span></button>"
+        document.getElementById("biblia").innerHTML = ""
+        setTimeout(() => document.getElementById("biblia").innerHTML = html, 5);
+    }
+
+    document.getElementById("questoes").innerHTML = geraQuestoes(questoes)
+    </script>
+</html>

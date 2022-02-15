@@ -1,0 +1,94 @@
+/* Reset da página e elementos */
+html, body{
+    margin: 0;
+    padding: 0;
+}
+body {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: min-content auto;
+    height: 100vh;
+}
+fieldset {
+    margin: 0;
+}
+input {
+    display: block;
+}
+label {
+    display: grid;
+    grid-template-columns: max-content auto;
+    column-gap: .2em;
+}
+/* END: Reset da página e elementos */
+
+.controle{
+    display: flex;
+    justify-content: space-around;
+    padding-top: .3em;
+}
+
+/* container de questoes */
+.questoes {
+    display: grid;
+    row-gap: .5em;
+    background-color: pink;
+    padding: 0.5em;
+    margin-top: 0.3em;
+    overflow: auto;
+}
+/* END: container de questoes */
+
+/* Estilização do card de questão */
+.questao{
+    display: grid;
+    grid-template-columns: min-content auto;
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas:"p p"
+                        "dr dr"
+                        "b b";
+    border: solid;
+    padding: .5em;
+    border-radius: .5em;
+    background-color: white;
+    height: max-content;
+    row-gap: .5em;
+}
+.questao > .id {
+    font-size: 1em;
+    font-weight: bold;
+}
+.questao > label.pergunta{
+    grid-area: p;
+}
+.questao > fieldset.respostas{
+    grid-area: dr;
+}
+.questao > button {
+    grid-area: b;
+}
+.opcoes{
+    display: grid;
+    row-gap: .5em;
+}
+
+.respostas > .pontuacao,
+.respostas > .extenso {
+    margin-top: .5em;
+}
+
+/* Equivalente do row-gap no fieldset#opcoes */
+/* fieldset#opcoes > label:not(:first-of-type),
+fieldset#opcoes > input:not(:first-of-type) {
+    margin-top: .5em;
+} */
+
+/* END: Estilização do card de questão */
+
+/* Draggin and Drop */
+
+.questao.dragging {
+    opacity: .75;
+}
+
+/* END: Drag and Drop */

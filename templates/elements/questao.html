@@ -1,0 +1,45 @@
+<fieldset class="questao" draggable="true">
+    <legend class="id">Questão {{{id}}}:</legend>
+    <label class="pergunta">Pergunta:
+        <input type="text" placeholder="Digite a pergunta aqui"/>
+    </label>
+
+    <fieldset class="respostas">
+        <legend>Respostas: </legend>
+
+        <label class="alternativaCorreta">Alternativa Correta:
+            <select>
+                <option value="a">a</option>
+                <option value="b">b</option>
+                <option value="c">c</option>
+                <option value="d">d</option>
+            </select>
+        </label>
+
+        <fieldset class="opcoes">
+            <legend>Opções: </legend>
+            <label class="a">a)
+                <input type="text" placeholder="Digite o valor da opção"/>
+            </label>
+            <label class="b">b)
+                <input type="text" placeholder="Digite o valor da opção"/>
+            </label>
+            <label class="c">c)
+                <input type="text" placeholder="Digite o valor da opção"/>
+            </label>
+            <label class="d">d)
+                <input type="text" placeholder="Digite o valor da opção"/>
+            </label>
+        </fieldset>
+
+        <label class="extenso">Resposta por extenso:
+            <input type="text" placeholder="Digite a forma extensa da resposta"/>
+        </label>
+        
+        <label class="pontuacao">Pontuação da questão:
+            <input type="number" type="number" min="0" step="1" oninput="validity.valid||(value='');" placeholder="Digite a pontuação da questão"/>
+        </label>
+    
+    </fieldset>
+    <button onclick="removeQuestion(this)">Remover</button>
+</fieldset>
