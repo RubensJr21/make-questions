@@ -1,4 +1,4 @@
-function getDragAfterElement(container, y){
+function _getDragAfterElement(container, y){
     const draggableElements = [...container.querySelectorAll('.questao:not(.dragging)')]
 
     return draggableElements.reduce((closest, child) => {
@@ -15,7 +15,7 @@ document.querySelector(".questoes")
     .addEventListener("dragover", (e) => {
         e.preventDefault()
         const questoes = document.querySelector(".questoes")
-        const afterElement = getDragAfterElement(questoes, e.clientY)
+        const afterElement = _getDragAfterElement(questoes, e.clientY)
         const draggable = document.querySelector(".dragging")
         if(afterElement == null){
             questoes.appendChild(draggable)
@@ -44,7 +44,7 @@ async function addQuestion(){
     questionElement.addEventListener('dragend', (event) => {
         const divQuestion = event.target
         divQuestion.classList.remove("dragging")
-        updateNumbers()
+        _updateNumbers()
     })
 
     questoes.appendChild(questionElement)
@@ -54,10 +54,10 @@ function removeQuestion(element = new HTMLUnknownElement()){
     const itemQuestion = element.parentElement
     const divQuestions = itemQuestion.parentElement
     divQuestions.removeChild(itemQuestion)
-    updateNumbers()
+    _updateNumbers()
 }
 
-function getQuestionsFormated(){
+function _getQuestionsFormated(){
     const questoes = [...document.querySelector(".questoes").children]
 
     return questoes.map((questao) => {
@@ -92,18 +92,23 @@ async function _getCodHTMLFinal(questoes){
         })
 }
 
+async function _copyToClipboard(text){
+    await navigator.clipboard.writeText(text)
+}
+
 async function exportHTML(){
     const identArrayOfQuestions = (acumulador, linha, index) => {
         return acumulador += index > 0 ? `    ${linha}\n` : `${linha}\n`
     }
-    const questoes = JSON.stringify(getQuestionsFormated(), null, 4)
+    const questoes = JSON.stringify(_getQuestionsFormated(), null, 4)
                         .split("\n")
                         .reduce(identArrayOfQuestions, "")
     const htmlfinal = await _getCodHTMLFinal(questoes)
-    console.log(getQuestionsFormated())
+    await _copyToClipboard(htmlfinal)
+    alert("Html copiado para área de transferência(clipboard).")
 }
 
-function updateNumbers(){
+function _updateNumbers(){
     console.log("Atualizando números...")
     const questoes = [...document.querySelector(".questoes").children]
     questoes.forEach((element, index) => {
